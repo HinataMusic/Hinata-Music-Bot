@@ -17,6 +17,8 @@ module.exports = {
 
     async execute(interaction) {
 
+        console.log("PLAY COMMAND RECEIVED");
+
         const query = interaction.options.getString("song");
         const voiceChannel = interaction.member.voice.channel;
 
@@ -27,9 +29,12 @@ module.exports = {
             });
         }
 
-        await interaction.deferReply();
-
         try {
+
+            await interaction.deferReply();
+            console.log("DEFER DONE");
+
+            console.log("STARTING PLAYER...");
 
             const result = await interaction.client.player.play(
                 voiceChannel,
@@ -42,7 +47,7 @@ module.exports = {
             );
 
             console.log("========== PLAY RESULT ==========");
-            console.log(result);
+            console.dir(result, { depth: null });
             console.log("================================");
 
             playerManager.set(interaction.guild.id, {
@@ -64,12 +69,20 @@ module.exports = {
 
         } catch (err) {
 
-            console.error("========== PLAY ERROR ==========");
+            console.log("========== REAL ERROR ==========");
             console.error(err);
-            console.error("================================");
+            console.error(err.stack);
+            console.log("================================");
 
-            return interaction.editReply({
-                content: `❌ ${err.message}`
+            if (interaction.deferred || interaction.replied) {
+                return interaction.editReply({
+                    content: `❌ ${err.message}`
+                });
+            }
+
+            return interaction.reply({
+                content: `❌ ${err.message}`,
+                ephemeral: true
             });
 
         }
