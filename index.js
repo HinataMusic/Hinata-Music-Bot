@@ -74,3 +74,14 @@ client.on(Events.InteractionCreate, async interaction => {
 });
 
 client.login(process.env.TOKEN);
+const express = require("express");
+const app = express();
+
+app.get("/", (req, res) => {
+  res.send("Hinata Music Bot Online");
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on ${PORT}`);
+});
