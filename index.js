@@ -17,12 +17,11 @@ const client = new Client({
     ]
 });
 
-client.commands = new Collection();
-
 client.player = new Player(client);
 
 (async () => {
     await client.player.extractors.loadMulti(DefaultExtractors);
+    console.log("✅ Extractors Loaded");
 })();
 
 // Load handlers
